@@ -1,38 +1,35 @@
 # AWS Monitoring Lab
 
+[![CI](https://github.com/M4rc3low/aws-monitoring-lab/actions/workflows/ci.yml/badge.svg)](https://github.com/M4rc3low/aws-monitoring-lab/actions/workflows/ci.yml)
 ![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)
 ![Zabbix](https://img.shields.io/badge/Zabbix-Monitoring-red)
 ![Grafana](https://img.shields.io/badge/Grafana-Observability-F46800?logo=grafana&logoColor=white)
 ![Status](https://img.shields.io/badge/status-learning%20lab-blue)
-![License](https://img.shields.io/badge/license-MIT-lightgrey)
 
-Laboratorio de monitoramento local com Zabbix e Grafana, criado para estudar observabilidade e acompanhar a saude de instancias AWS de estudo.
+Laboratório local de **monitoramento e observabilidade com Zabbix e Grafana**, criado para estudar a montagem de uma stack reproduzível com Docker Compose e preparar uma futura integração com infraestrutura AWS de estudo.
 
-O objetivo e montar um ambiente pratico com Docker Compose, documentar o processo e criar uma base para evoluir o monitoramento de infraestrutura em nuvem.
+## Estado atual
 
-## Objetivo do laboratorio
+O ambiente já inclui:
 
-- Subir Zabbix Server localmente
-- Subir interface web do Zabbix
-- Subir banco PostgreSQL para o Zabbix
-- Subir Grafana
-- Preparar integracao futura com instancias AWS
-- Documentar passos de uso, credenciais locais e boas praticas
-
-## Servicos incluidos
-
-- PostgreSQL para Zabbix
+- PostgreSQL para persistência do Zabbix
 - Zabbix Server
 - Zabbix Web com Nginx
 - Grafana
+- Configuração via `.env`
+- Documentação específica em `docs/`
+- Pipeline de CI que valida o arquivo `docker-compose.yml`
+
+> A integração com instâncias AWS ainda faz parte do roadmap. O repositório atual demonstra a stack de observabilidade local e a preparação para esse próximo passo.
 
 ## Estrutura
 
-```txt
+```text
 aws-monitoring-lab/
 ├── docker-compose.yml
 ├── .env.example
 ├── .gitignore
+├── .github/workflows/ci.yml
 ├── docs/
 │   ├── ZABBIX.md
 │   ├── GRAFANA.md
@@ -54,55 +51,72 @@ Suba os containers:
 docker compose up -d
 ```
 
-Verifique os containers:
+Confira o estado dos serviços:
 
 ```bash
 docker compose ps
 ```
 
-Acesse:
+Acesse localmente:
 
-```txt
+```text
 Zabbix: http://localhost:8080
 Grafana: http://localhost:3000
 ```
 
-Credenciais padrao de laboratorio:
+As credenciais padrão de laboratório podem ser utilizadas apenas no ambiente local inicial. Antes de qualquer exposição em rede ou uso compartilhado, altere as senhas.
 
-```txt
-Zabbix: Admin / zabbix
-Grafana: admin / admin
-```
-
-Pare o ambiente:
+Para encerrar:
 
 ```bash
 docker compose down
 ```
 
-Remova volumes locais quando quiser reiniciar do zero:
+Para remover também os volumes e reiniciar o laboratório do zero:
 
 ```bash
 docker compose down -v
 ```
 
-## Boas praticas
+## Validação
 
-- Nao usar senhas padrao em producao.
-- Nao expor esse ambiente diretamente na internet.
-- Usar security groups restritos em instancias AWS.
-- Monitorar apenas instancias de estudo ou autorizadas.
-- Documentar hosts, templates e dashboards criados.
+O GitHub Actions executa:
+
+```bash
+docker compose config
+```
+
+Isso valida a sintaxe e a composição final dos serviços a cada push ou pull request para `main`.
+
+Você também pode executar a mesma verificação localmente antes de subir os containers:
+
+```bash
+docker compose config
+```
+
+## Boas práticas
+
+- Não usar senhas padrão fora do laboratório local.
+- Não expor Zabbix, Grafana ou PostgreSQL diretamente na internet.
+- Não versionar `.env` com credenciais reais.
+- Em AWS, usar security groups restritos e monitorar apenas recursos autorizados.
+- Documentar hosts, templates, dashboards, métricas e alertas adicionados ao laboratório.
 
 ## Roadmap
 
 - [x] Criar ambiente local com Docker Compose
-- [x] Adicionar Zabbix e Grafana
-- [x] Criar documentacao inicial
-- [ ] Adicionar agente Zabbix em instancia AWS de estudo
-- [ ] Criar dashboard no Grafana
-- [ ] Documentar metricas principais
-- [ ] Adicionar alertas basicos
+- [x] Adicionar Zabbix, PostgreSQL e Grafana
+- [x] Criar documentação inicial
+- [x] Adicionar validação automática do Docker Compose
+- [ ] Adicionar agente Zabbix em instância AWS de estudo
+- [ ] Criar dashboard próprio no Grafana
+- [ ] Documentar métricas principais
+- [ ] Adicionar alertas básicos
+- [ ] Documentar arquitetura final da integração AWS
+
+## Valor profissional
+
+Este laboratório demonstra prática com **containers, composição de serviços, monitoramento, observabilidade e CI**, mantendo clara a diferença entre o que já está implementado localmente e o que ainda será integrado à AWS.
 
 ## Autor
 
